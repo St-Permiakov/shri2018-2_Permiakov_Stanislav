@@ -1,0 +1,17 @@
+{
+  "name": "shri_task1",
+  "version": "1.0.0",
+  "description": "Yandex SHRI 2018/2 task 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "shri2018"
+  ],
+  "author": "Stanislav Permiakov",
+  "license": "ISC",
+  "devDependencies": {
+
+  }
+}

@@ -1,0 +1,12 @@
+.card {
+    background: color('bg');
+    border-radius: 20px;
+
+    &:hover {
+        box-shadow: 0 2px 6px 0 rgba(197,186,186,0.50);
+    }
+
+    &--small {}
+
+    &--big {}
+}
