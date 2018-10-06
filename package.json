@@ -1,17 +1,33 @@
 {
-  "name": "shri_task1",
+  "name": "test",
   "version": "1.0.0",
-  "description": "Yandex SHRI 2018/2 task 1",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp default",
+    "build": "gulp build"
   },
-  "keywords": [
-    "shri2018"
-  ],
-  "author": "Stanislav Permiakov",
+  "author": "",
   "license": "ISC",
   "devDependencies": {
-
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.4",
+    "babel-preset-es2015": "^6.24.1",
+    "browser-sync": "^2.26.0",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-file-include": "^2.0.1",
+    "gulp-flatten": "^0.4.0",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-plumber": "^1.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-watch": "^5.0.1",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-stream": "^5.1.1"
   }
 }
