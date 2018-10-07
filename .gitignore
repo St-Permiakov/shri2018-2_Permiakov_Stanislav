@@ -4,7 +4,6 @@
 app/styles/helpers/_sprites.scss
 app/common/styles/helpers/icons.scss
 app/resources/svg/icons.svg
-dist
 
 # Numerous always-ignore extensions
 *.bak
