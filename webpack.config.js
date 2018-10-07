@@ -1,4 +1,5 @@
 module.exports = {
+  mode: 'development',
   output: {
     filename: 'main.js'
   },
@@ -7,10 +8,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules)/,
-        loader: 'babel-loader',
-        query: {
-          presets: [['latest', { modules: false }]]
-        }
+        loader: 'babel-loader'
       }
     ]
   }

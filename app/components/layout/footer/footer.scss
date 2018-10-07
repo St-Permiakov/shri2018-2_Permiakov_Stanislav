@@ -1,5 +1,6 @@
 .footer {
-    padding: 15px 0 25px;
+    padding: 20px 0 25px;
+    border-top: 1px solid color('border');
 
     &__inner {
         display: flex;
@@ -37,9 +38,17 @@
     }
 
     &__link {
-        font-size: 12px;
+        font-size: px2rem(20px);
         color: color('gray');
         transition: color 250ms;
+
+        @include media-breakpoint-down(xl) {
+            font-size: px2rem(12px);
+        }
+
+        @include media-breakpoint-down(sm) {
+            font-size: px2rem(24px);
+        }
 
         &:hover {
             color: color('black');
@@ -47,8 +56,16 @@
     }
 
     &__copyright {
-        font-size: 12px;
+        font-size: px2rem(20px);
         color: color('gray');
+
+        @include media-breakpoint-down(xl) {
+            font-size: px2rem(12px);
+        }
+
+        @include media-breakpoint-down(sm) {
+            font-size: px2rem(24px);
+        }
 
         .footer__link {
             margin: 0 0 0 5px;

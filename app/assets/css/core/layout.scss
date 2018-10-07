@@ -15,15 +15,25 @@
 }
 
 .main {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     flex-grow: 1;
-    max-width: 100%;
-    padding: 0 40px;
+    width: 100%;
+    padding: 30px 170px 80px;
+
+    @include media-breakpoint-down(lg) {
+        padding: 30px 100px 80px;
+    }
+
+    @include media-breakpoint-down(md) {
+        padding: 30px 40px 80px;
+    }
 
     @include media-breakpoint-down(sm) {
-        padding: 0 20px;
+        padding: 30px 20px 80px;
+    }
+
+    &__title {
+        margin: 0 0 30px;
+        font-size: px2rem(36px);
     }
 }
 

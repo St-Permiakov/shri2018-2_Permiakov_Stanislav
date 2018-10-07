@@ -2,7 +2,6 @@
     z-index: 10;
     position: relative;
     width: 100%;
-    margin: 0 0 25px;
     padding: 25px 0;
     border-bottom: 1px solid color('border');
 
@@ -20,7 +19,7 @@
     }
 
     &__logo {
-        margin: 0 50px 0 0;
+        margin: 0 15px 0 0;
     }
 
     &__nav {
@@ -67,7 +66,7 @@
     }
 
     &__nav-link {
-        font-size: 16px;
+        font-size: px2rem(30px);
         font-weight: 600;
         opacity: 0.6;
         transition: opacity 250ms;
@@ -76,8 +75,12 @@
             opacity: 1;
         }
 
+        @include media-breakpoint-down(xl) {
+            font-size: px2rem(16px);
+        }
+
         @include media-breakpoint-down(sm) {
-            font-size: 18px;
+            font-size: px2rem(32px);
         }
     }
 
