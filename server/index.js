@@ -20,12 +20,21 @@ const port = 8000;
 const serverStartTime = Date.now();
 
 let responseBody;
+let status;
 
 app.use('/api/events', (request, response, next) => {
     if (request.query.type) {
         const types = request.query.type.split(':');
         let filteredEvents;
         responseBody = {"events": []};
+
+        if (types.length === 0) {
+            status = 400;
+            responseBody = '<p>Вы не указали ни одного типа событий.</p>';
+            return;
+        }
+
+        status = 200;
 
         types.forEach(type => {
             switch (type) {
@@ -40,10 +49,14 @@ app.use('/api/events', (request, response, next) => {
                     });
                     break;
                 default:
-                    responseBody = {"status": "400 - incorrect type"};
+                    status = 400;
+                    responseBody = 'Неверный тип события';
                     return;
             }
         });
+    } else {
+        status = 400;
+        responseBody = 'Вы не указали ни одного типа событий!';
     }
     next();
 })
@@ -64,7 +77,8 @@ app.get('/status',function(request, response, next){
 });
 
 app.get('/api/events', (request, response) => {
-    response.status(200).json(responseBody);
+    status = status ? status : 200;
+    response.status(status).json(responseBody);
 });
 
 app.get('/*', (request, response) => {

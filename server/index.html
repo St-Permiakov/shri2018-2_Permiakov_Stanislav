@@ -20,6 +20,21 @@
     <p><a href="/no_such_page">Неверная ссылка</a></p>
 
     <script>
+
+        function getEvents() {
+            function reqListener () {
+                document.querySelector('.js-events-response').innerHTML = '<p><strong>Результат также выведен в консоль браузера</strong></p><p>' + this.responseText + '</p>';
+                console.log(JSON.parse(this.responseText));
+            }
+
+            var types = document.querySelector('.js-events-types').value.trim().replace(/\s*/gi, '').split(',');
+
+            var req = new XMLHttpRequest();
+            req.onload = reqListener;
+            req.open('get', '/api/events?type=' + types.join(':'), true);
+            req.send();
+        }
+
         document.querySelector('.js-status-request').addEventListener('click', function (e) {
             function reqListener () {
                 document.querySelector('.js-status-response').innerHTML = this.responseText;
@@ -32,17 +47,11 @@
         });
 
         document.querySelector('.js-events-request').addEventListener('click', function (e) {
-            function reqListener () {
-                document.querySelector('.js-events-response').innerHTML = '<p><strong>Результат также выведен в консоль браузера</strong></p>' + this.responseText;
-                console.log(JSON.parse(this.responseText));
-            }
+            getEvents();
+        });
 
-            var types = document.querySelector('.js-events-types').value.trim().replace(/\s*/gi, '').split(',');
-
-            var req = new XMLHttpRequest();
-            req.onload = reqListener;
-            req.open('get', '/api/events?type=' + types.join(':'), true);
-            req.send();
+        document.querySelector('.js-events-types').addEventListener('keyup', function (e) {
+            if (e.code === 'Enter' || e.key === 'Enter' || e.which === 13) getEvents();
         });
     </script>
 </body>
