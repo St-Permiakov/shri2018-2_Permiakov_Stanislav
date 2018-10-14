@@ -49,7 +49,7 @@ app.use('/api/events', (request, response, next) => {
 })
 
 app.get('/', (request, response) => {
-    response.send('<h1>Вас приветствует сервер на Express!</h1><p><a href="/status">Получить статус</a></p><p><a href="/api/events?type=info:critical">Получить события</a></p><p><a href="/api/events?type=wrongtype">Получить некорректные события</a></p><p><a href="/no_such_page">Неверная ссылка</a></p>');
+    response.status(200).sendFile('./index.html', {"root": __dirname});
 });
 
 app.get('/status',function(request, response, next){
@@ -58,17 +58,17 @@ app.get('/status',function(request, response, next){
     const day = date.getDate();
     const month = date.getMonth() > 9 ? date.getMonth() + 1 : '0' + date.getMonth();
     const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
+    const hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours();
+    const minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();
     response.send('<p>Сервер работает с ' + day + '.' + month + '.' + year + ', ' + hours + ':' + minutes + ', а это уже целых ' + msToTime(duration) + '!</p><p>Пожалуйста, не напрягайте сервер! Он ещё молодой...</p>')
 });
 
 app.get('/api/events', (request, response) => {
-    response.json(responseBody);
+    response.status(200).json(responseBody);
 });
 
 app.get('/*', (request, response) => {
-    response.send('<h1>Page not found</h1>');
+    response.status(404).send('<h1>Page not found</h1>');
 });
 
 app.use((err, request, response, next) => {
