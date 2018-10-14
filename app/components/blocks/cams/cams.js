@@ -42,7 +42,7 @@ class Cams {
         });
 
         $(window).on('click', e => {
-            if ($(e.target).closest('.js-cam').length === 0) {
+            if ($(e.target).closest('.js-cam').length === 0 || $(e.target).hasClass('js-cam-back')) {
                 this.closeCam();
             }
         });
@@ -72,8 +72,6 @@ class Cams {
         const brightness = parseInt($cam.find('.js-cam-tuner-brightness').val()) + 50;
         const contrast = parseInt($cam.find('.js-cam-tuner-contrast').val()) + 50;
 
-        console.log(brightness, contrast);
-
         $cam.find('.js-cam-video').css('filter', 'brightness(' + brightness + '%) contrast(' + contrast + '%)');
     }
 
@@ -81,10 +79,12 @@ class Cams {
         const $camInner = $cam.find('.js-cam-inner');
         const $video = $cam.find('.js-cam-video');
 
+        $('html, body').addClass('full-screen');
+
         this.camParams.width = $cam.width();
         this.camParams.height = $cam.height();
         this.camParams.offX = $cam.position().left;
-        this.camParams.offY = $cam.position().top;
+        this.camParams.offY = $cam.position().top - $(window).scrollTop();
 
         $camInner.css({
             'width': this.camParams.width,
@@ -128,6 +128,7 @@ class Cams {
                 $cam.removeClass('is-active');
                 $cam.removeAttr('style');
                 $camInner.removeAttr('style');
+                $('html, body').removeClass('full-screen');
             }, 250);
 
             clearInterval(this.soundListener);
