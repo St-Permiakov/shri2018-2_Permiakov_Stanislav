@@ -2,19 +2,24 @@
     display: flex;
     cursor: pointer;
 
-    &.is-active &__inner {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transition: width 250ms ease-in-out, height 250ms ease-in-out, transform 250ms ease-in-out;
+    &.is-active {
+        z-index: 1;
     }
 
     &__inner {
+        position: relative;
         display: flex;
         width: 100%;
         overflow: hidden;
+
+        .cam.is-active & {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: width 250ms ease-in-out, height 250ms ease-in-out, transform 250ms ease-in-out;
+        }
     }
 
     &__pic {
@@ -26,4 +31,208 @@
         height: 100%;
         object-fit: cover;
     }
+
+    &__controls {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 250ms;
+
+        .cam.is-active & {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+
+    &__sound-meter {
+        position: absolute;
+        left: 20px;
+        bottom: 10px;
+        height: calc(100% - 160px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__sound-meter-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 10px;
+        padding: 10px;
+        background-color: color('primary');
+    }
+
+    &__sound-meter-bar {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+        border: 3px solid color('primary');
+    }
+
+    &__sound-meter-segment {
+        height: calc(10% - 5px);
+        width: 100%;
+        background-color: color('primary');
+    }
+
+    &__tuners {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+    }
+
+    &__tuner {
+        display: flex;
+        height: 30px;
+        margin: 0 0 10px;
+    }
+
+    &__tuner-bar {
+        width: 100%; /* Specific width is required for Firefox. */
+        -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+        background: transparent; /* Otherwise white in Chrome */
+        margin: 0;
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+        }
+
+        &:focus {
+            outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+        }
+
+        &::-ms-track {
+            width: 100%;
+            cursor: pointer;
+
+            /* Hides the slider so custom styles can be added */
+            background: transparent;
+            border-color: transparent;
+            color: transparent;
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+            background: transparent;
+            cursor: pointer;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3), inset 0 0 3px 0 rgba(0,0,0,0.3);
+        }
+
+        &::-moz-range-thumb {
+            border: 3px solid #fff;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+            background: transparent;
+            cursor: pointer;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3), inset 0 0 3px 0 rgba(0,0,0,0.3);
+        }
+
+        &::-ms-thumb {
+            border: 3px solid #fff;
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+            background: transparent;
+            cursor: pointer;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3), inset 0 0 3px 0 rgba(0,0,0,0.3);
+        }
+
+        &.cam__tuner-bar--brightness::-webkit-slider-runnable-track {
+            width: 100%;
+            cursor: pointer;
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(241,218,54,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+            border-radius: 50px;
+            border: 0.2px solid #010101;
+        }
+
+        &.cam__tuner-bar--brightness:focus::-webkit-slider-runnable-track {
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(241,218,54,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+        }
+
+        &.cam__tuner-bar--brightness::-moz-range-track {
+            width: 100%;
+            cursor: pointer;
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(241,218,54,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+            border-radius: 50px;
+            border: 0.2px solid #010101;
+        }
+
+        &.cam__tuner-bar--brightness::-ms-track {
+            width: 100%;
+            cursor: pointer;
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(241,218,54,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);
+            border-radius: 50px;
+            border: 0.2px solid #010101;
+        }
+
+        &.cam__tuner-bar--contrast::-webkit-slider-runnable-track {
+            width: 100%;
+            cursor: pointer;
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(0,0,0,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+            border-radius: 50px;
+            border: 0.2px solid #010101;
+        }
+
+        &.cam__tuner-bar--contrast:focus::-webkit-slider-runnable-track {
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(0,0,0,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+        }
+
+        &.cam__tuner-bar--contrast::-moz-range-track {
+            width: 100%;
+            cursor: pointer;
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(0,0,0,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+            border-radius: 50px;
+            border: 0.2px solid #010101;
+        }
+
+        &.cam__tuner-bar--contrast::-ms-track {
+            width: 100%;
+            cursor: pointer;
+            background: rgb(254,252,234);
+            background: -moz-linear-gradient(left, rgba(254,252,234,1) 0%, rgba(0,0,0,1) 100%);
+            background: -webkit-linear-gradient(left, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+            background: linear-gradient(to right, rgba(254,252,234,1) 0%,rgba(0,0,0,1) 100%);
+            border-radius: 50px;
+            border: 0.2px solid #010101;
+        }
+    }
+
 }

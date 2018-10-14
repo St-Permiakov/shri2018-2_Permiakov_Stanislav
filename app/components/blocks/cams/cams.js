@@ -10,7 +10,15 @@ class Cams {
         this.opts = $.extend({}, this.$el.data(), opts);
 
         this.$cams = this.$el.find('.js-cam');
-        this.camParams = { width: null, height: null, offX: null, offY: null };
+        this.camParams = {
+            width: null,
+            height: null,
+            offX: null,
+            offY: null
+        };
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.context = new AudioContext();
 
         this.init();
     }
@@ -28,13 +36,19 @@ class Cams {
     setListeners() {
         this.$el.on('click', '.js-cam', e => {
             const $cam = $(e.currentTarget);
-            this.openCam($cam);
+            if (!$cam.hasClass('is-active')) {
+                this.openCam($cam);
+            }
         });
 
         $(window).on('click', e => {
             if ($(e.target).closest('.js-cam').length === 0) {
                 this.closeCam();
             }
+        });
+
+        this.$el.on('change', '.js-cam-tuner-brightness, .js-cam-tuner-contrast', e => {
+            this.tuneCam($(e.currentTarget).parents('.js-cam'));
         });
     }
 
@@ -54,8 +68,18 @@ class Cams {
         }
     }
 
+    tuneCam($cam) {
+        const brightness = parseInt($cam.find('.js-cam-tuner-brightness').val()) + 50;
+        const contrast = parseInt($cam.find('.js-cam-tuner-contrast').val()) + 50;
+
+        console.log(brightness, contrast);
+
+        $cam.find('.js-cam-video').css('filter', 'brightness(' + brightness + '%) contrast(' + contrast + '%)');
+    }
+
     openCam($cam) {
         const $camInner = $cam.find('.js-cam-inner');
+        const $video = $cam.find('.js-cam-video');
 
         this.camParams.width = $cam.width();
         this.camParams.height = $cam.height();
@@ -83,7 +107,9 @@ class Cams {
             });
         }, 100);
 
-        $cam.find('.js-cam-video').attr('controls', 'controls')[0].play();
+        $video.attr('controls', 'controls')[0].play();
+
+        this.audioLevelAnalyser($cam);
     }
 
     closeCam() {
@@ -103,7 +129,54 @@ class Cams {
                 $cam.removeAttr('style');
                 $camInner.removeAttr('style');
             }, 250);
+
+            clearInterval(this.soundListener);
         }
+    }
+
+    countAverageVol(arr) {
+        let values = 0;
+        let average;
+        let length = arr.length;
+
+        for (var i = 0; i < length; i++) {
+            values += arr[i];
+        }
+
+        average = Math.round(values / length);
+        return average;
+    }
+
+    createAnaliser() {
+
+    }
+
+    audioLevelAnalyser($cam) {
+        const video = $cam.find('.js-cam-video')[0];
+        let vol;
+
+        const analyser = this.context.createAnalyser();
+        analyser.smoothingTimeConstant = 0.3;
+        analyser.fftSize = 1024;
+
+        const node = this.context.createScriptProcessor(2048, 1, 1);
+
+        const source = this.context.createMediaElementSource(video);
+        source.connect(analyser);
+        analyser.connect(node);
+        node.connect(this.context.destination);
+        source.connect(this.context.destination);
+
+        node.onaudioprocess = () => {
+            // get the average, bincount is fftsize / 2
+            const arr = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(arr);
+            vol = this.countAverageVol(arr);
+        }
+
+        this.soundListener = setInterval(() => {
+            if (!video.paused && !video.muted) console.log((vol));
+        }, 100);
     }
 }
 
