@@ -32,10 +32,11 @@ app/resources/svg/icons.svg
 [Rr]eleases/
 [Xx]64/
 [Xx]86/
-# [Bb]uild/
+[Bb]uild/
 bld/
 [Bb]in/
 [Oo]bj/
+[Dd]ist/
 
 # Visual Studio 2015 cache/options directory
 .vs/
