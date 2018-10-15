@@ -36,7 +36,7 @@ app/resources/svg/icons.svg
 bld/
 [Bb]in/
 [Oo]bj/
-[Dd]ist/
+# [Dd]ist/
 
 # Visual Studio 2015 cache/options directory
 .vs/
