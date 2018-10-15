@@ -169,14 +169,23 @@ class Cams {
         source.connect(this.context.destination);
 
         node.onaudioprocess = () => {
-            // get the average, bincount is fftsize / 2
             const arr = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(arr);
             vol = this.countAverageVol(arr);
         }
 
         this.soundListener = setInterval(() => {
-            if (!video.paused && !video.muted) console.log((vol));
+            if (!video.paused && !video.muted) {
+                vol = vol > 10 ? Math.ceil(vol / 10) : 0;
+
+                $cam.find('.js-cam-sound-meter-segment').each((i, item) => {
+                    if (i > vol) {
+                        $(item).hide();
+                    } else {
+                        $(item).show();
+                    }
+                })
+            }
         }, 100);
     }
 }
