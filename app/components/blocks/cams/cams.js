@@ -31,6 +31,7 @@ class Cams {
         });
 
         this.setListeners();
+        this.setAnalisers();
     }
 
     setListeners() {
@@ -66,6 +67,46 @@ class Cams {
                 // video.play();
             });
         }
+    }
+
+    setAnalisers() {
+        this.$cams.each((i, cam) => {
+            const $cam = $(cam);
+            const video = $cam.find('.js-cam-video')[0];
+            let vol;
+
+            const analyser = this.context.createAnalyser();
+            analyser.smoothingTimeConstant = 0.3;
+            analyser.fftSize = 512;
+
+            const node = this.context.createScriptProcessor(2048, 1, 1);
+
+            const source = this.context.createMediaElementSource(video);
+            source.connect(analyser);
+            analyser.connect(node);
+            node.connect(this.context.destination);
+            source.connect(this.context.destination);
+            const arr = new Uint8Array(analyser.frequencyBinCount);
+
+            node.onaudioprocess = () => {
+                analyser.getByteFrequencyData(arr);
+                vol = this.countAverageVol(arr);
+            }
+
+            this.soundListener = setInterval(() => {
+                if (!video.paused && !video.muted) {
+                    vol = vol > 10 ? Math.ceil(vol / 10) : 0;
+
+                    $cam.find('.js-cam-sound-meter-segment').each((i, item) => {
+                        if (i > vol) {
+                            $(item).hide();
+                        } else {
+                            $(item).show();
+                        }
+                    })
+                }
+            }, 100);
+        });
     }
 
     tuneCam($cam) {
@@ -108,8 +149,6 @@ class Cams {
         }, 100);
 
         $video.attr('controls', 'controls')[0].play();
-
-        this.audioLevelAnalyser($cam);
     }
 
     closeCam() {
@@ -146,47 +185,6 @@ class Cams {
 
         average = Math.round(values / length);
         return average;
-    }
-
-    createAnaliser() {
-
-    }
-
-    audioLevelAnalyser($cam) {
-        const video = $cam.find('.js-cam-video')[0];
-        let vol;
-
-        const analyser = this.context.createAnalyser();
-        analyser.smoothingTimeConstant = 0.3;
-        analyser.fftSize = 1024;
-
-        const node = this.context.createScriptProcessor(2048, 1, 1);
-
-        const source = this.context.createMediaElementSource(video);
-        source.connect(analyser);
-        analyser.connect(node);
-        node.connect(this.context.destination);
-        source.connect(this.context.destination);
-
-        node.onaudioprocess = () => {
-            const arr = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(arr);
-            vol = this.countAverageVol(arr);
-        }
-
-        this.soundListener = setInterval(() => {
-            if (!video.paused && !video.muted) {
-                vol = vol > 10 ? Math.ceil(vol / 10) : 0;
-
-                $cam.find('.js-cam-sound-meter-segment').each((i, item) => {
-                    if (i > vol) {
-                        $(item).hide();
-                    } else {
-                        $(item).show();
-                    }
-                })
-            }
-        }, 100);
     }
 }
 

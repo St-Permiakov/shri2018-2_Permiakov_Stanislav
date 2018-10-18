@@ -6,6 +6,7 @@
   "scripts": {
     "start": "gulp default",
     "start-stream": "run-p start-server http-server murphy",
+    "stream-only": "run-p http-server murphy",
     "start-server": "gulp default",
     "build": "gulp build",
     "murphy": "murphy",
