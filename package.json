@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "gulp default",
-    "build": "gulp build"
+    "start-stream": "run-p start-server http-server murphy",
+    "start-server": "gulp default",
+    "build": "gulp build",
+    "murphy": "murphy",
+    "http-server": "http-server -p 3102 --cors"
   },
   "author": "",
   "license": "ISC",
@@ -31,7 +35,10 @@
     "webpack-stream": "^5.1.1"
   },
   "dependencies": {
+    "@videojs/murphy": "^0.1.1",
     "hls.js": "^0.11.0",
-    "jquery": "^3.3.1"
+    "http-server": "^0.11.1",
+    "jquery": "^3.3.1",
+    "npm-run-all": "^4.1.3"
   }
 }
