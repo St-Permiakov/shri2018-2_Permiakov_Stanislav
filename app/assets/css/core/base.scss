@@ -21,6 +21,11 @@ html, body {
     @include media-breakpoint-down(md) {
         font-size: calc(36 / 1366 * 100vw);
     }
+
+    &.full-screen {
+        overflow: hidden;
+        height: auto;
+    }
 }
 
 *,

@@ -35,6 +35,10 @@
         margin: 0 0 30px;
         font-size: px2rem(36px);
     }
+
+    .full-screen & {
+        z-index: 30;
+    }
 }
 
 .wrapper {
