@@ -114,7 +114,8 @@ gulp.task('server', () => {
         tunnel: false,
         host: 'localhost',
         port: 3000,
-        logPrefix: "SHRI2018"
+        logPrefix: "SHRI2018",
+        browser: ["chrome.exe"]
     });
 });
 
