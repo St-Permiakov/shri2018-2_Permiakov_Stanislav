@@ -21,6 +21,10 @@ const flatten = require('gulp-flatten');
 const browserSync = require("browser-sync");
 const reload = browserSync.reload;
 
+var browserify = require("browserify");
+var source = require('vinyl-source-stream');
+var tsify = require("tsify");
+
 const path = {
     src: {
         html: 'app/components/views/**/*.html',
@@ -77,11 +81,18 @@ gulp.task('css:build', () => {
         .pipe(reload({stream: true}));
 });
 
-gulp.task('js:build', () => {
-    return gulp.src(path.src.js)
-        .pipe(webpackStream(webpackConfig), webpack)
-        .pipe(gulp.dest(path.build.js))
-        .pipe(reload({stream: true}));
+gulp.task("js:build", function () {
+    return browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['app/assets/js/main.ts'],
+        cache: {},
+        packageCache: {}
+    })
+    .plugin(tsify)
+    .bundle()
+    .pipe(source('main.js'))
+    .pipe(gulp.dest("dist/assets/js"));
 });
 
 gulp.task('img:build', () => {

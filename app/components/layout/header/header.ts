@@ -1,5 +1,10 @@
 class Header {
-    constructor(el, opts) {
+    DATA_KEY: string;
+    $el: JQuery<HTMLElement>;
+    opts: object;
+    $navBtn: JQuery<HTMLElement>;
+    $navMenu: JQuery<HTMLElement>;
+    constructor(el: HTMLElement, opts?: object) {
         const self = this;
         self.DATA_KEY = 'Header';
 

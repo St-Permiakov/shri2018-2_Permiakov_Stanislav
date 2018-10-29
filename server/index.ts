@@ -1,11 +1,11 @@
 const express = require('express');
 const events = require('../app/resources/data/events.json');
 
-function msToTime(duration) {
-    var milliseconds = parseInt((duration % 1000) / 100),
-      seconds = parseInt((duration / 1000) % 60),
-      minutes = parseInt((duration / (1000 * 60)) % 60),
-      hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+function msToTime(duration: number) {
+    var milliseconds: number | string = Math.round((duration % 1000) / 100),
+        seconds: number | string = Math.round((duration / 1000) % 60),
+        minutes: number | string = Math.round((duration / (1000 * 60)) % 60),
+        hours: number | string = Math.round((duration / (1000 * 60 * 60)) % 24);
 
     hours = (hours < 10) ? "0" + hours : hours;
     minutes = (minutes < 10) ? "0" + minutes : minutes;
@@ -20,7 +20,7 @@ const port = 8000;
 const serverStartTime = Date.now();
 
 let responseBody;
-let status;
+let thisStatus: number;
 
 app.use('/api/events', (request, response, next) => {
     if (request.query.type) {
@@ -29,12 +29,12 @@ app.use('/api/events', (request, response, next) => {
         responseBody = {"events": []};
 
         if (types.length === 0) {
-            status = 400;
+            thisStatus = 400;
             responseBody = '<p>Вы не указали ни одного типа событий.</p>';
             return;
         }
 
-        status = 200;
+        thisStatus = 200;
 
         types.forEach(type => {
             switch (type) {
@@ -49,13 +49,13 @@ app.use('/api/events', (request, response, next) => {
                     });
                     break;
                 default:
-                    status = 400;
+                    thisStatus = 400;
                     responseBody = 'Неверный тип события';
                     return;
             }
         });
     } else {
-        status = 400;
+        thisStatus = 400;
         responseBody = 'Вы не указали ни одного типа событий!';
     }
     next();
@@ -77,7 +77,7 @@ app.get('/status',function(request, response, next){
 });
 
 app.get('/api/events', (request, response) => {
-    status = status ? status : 200;
+    thisStatus = thisStatus ? thisStatus : 200;
     response.status(status).json(responseBody);
 });
 

@@ -1,7 +1,21 @@
 import Hls from 'hls.js';
 
+interface IWindow {
+    AudioContext: typeof AudioContext;
+    webkitAudioContext: typeof AudioContext;
+    mozAudioContext: typeof AudioContext;
+}
+declare const window: IWindow;
+
 class Cams {
-    constructor(el, opts) {
+    DATA_KEY: string;
+    $el: JQuery<any>;
+    opts: object;
+    $cams: JQuery<any>;
+    camParams: { width: number; height: number; offX: number; offY: number; };
+    context: any;
+    soundListener: number;
+    constructor(el: HTMLElement, opts?: object) {
         this.DATA_KEY = 'Cams';
 
         // опции
@@ -11,10 +25,10 @@ class Cams {
 
         this.$cams = this.$el.find('.js-cam');
         this.camParams = {
-            width: null,
-            height: null,
-            offX: null,
-            offY: null
+            width: 0,
+            height: 0,
+            offX: 0,
+            offY: 0
         };
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -53,7 +67,7 @@ class Cams {
         });
     }
 
-    initVideo(video, url) {
+    initVideo(video: HTMLVideoElement, url: string) {
         if (Hls.isSupported()) {
             var hls = new Hls();
             hls.loadSource(url);
@@ -73,7 +87,7 @@ class Cams {
         this.$cams.each((i, cam) => {
             const $cam = $(cam);
             const video = $cam.find('.js-cam-video')[0];
-            let vol;
+            let vol: number;
 
             const analyser = this.context.createAnalyser();
             analyser.smoothingTimeConstant = 0.3;
@@ -109,23 +123,23 @@ class Cams {
         });
     }
 
-    tuneCam($cam) {
-        const brightness = parseInt($cam.find('.js-cam-tuner-brightness').val()) + 50;
-        const contrast = parseInt($cam.find('.js-cam-tuner-contrast').val()) + 50;
+    tuneCam($cam: JQuery<any>) {
+        const brightness = parseInt(($cam.find('.js-cam-tuner-brightness').val() as string)) + 50;
+        const contrast = parseInt(($cam.find('.js-cam-tuner-contrast').val() as string)) + 50;
 
         $cam.find('.js-cam-video').css('filter', 'brightness(' + brightness + '%) contrast(' + contrast + '%)');
     }
 
-    openCam($cam) {
+    openCam($cam: JQuery<any>) {
         const $camInner = $cam.find('.js-cam-inner');
         const $video = $cam.find('.js-cam-video');
 
         $('html, body').addClass('full-screen');
 
-        this.camParams.width = $cam.width();
-        this.camParams.height = $cam.height();
+        this.camParams.width = ($cam.width() as number);
+        this.camParams.height = ($cam.height() as number);
         this.camParams.offX = $cam.position().left;
-        this.camParams.offY = $cam.position().top - $(window).scrollTop();
+        this.camParams.offY = $cam.position().top - ($(window).scrollTop() as number);
 
         $camInner.css({
             'width': this.camParams.width,
@@ -174,7 +188,7 @@ class Cams {
         }
     }
 
-    countAverageVol(arr) {
+    countAverageVol(arr: Uint8Array) {
         let values = 0;
         let average;
         let length = arr.length;

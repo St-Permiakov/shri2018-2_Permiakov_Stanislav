@@ -1,5 +1,12 @@
 class Pleer {
-    constructor(el, opts) {
+    DATA_KEY: string;
+    $el: JQuery<HTMLElement>;
+    opts: object;
+    $track: JQuery<HTMLElement>;
+    $trackLine: JQuery<HTMLElement>;
+    $trackControl: JQuery<HTMLElement>;
+    $trackTime: JQuery<HTMLElement>;
+    constructor(el: HTMLElement, opts?: object) {
         const self = this;
         self.DATA_KEY = 'Pleer';
 
