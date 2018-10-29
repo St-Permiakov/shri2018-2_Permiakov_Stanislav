@@ -40,7 +40,6 @@ class Camera {
         const self = this;
         const camera = self.$cameraWrapper[0];
 
-        // TODO: исправить баг мерцания под курсором
         if (window.innerWidth < 1025) {
             camera.addEventListener('pointerdown', e => {
                 camera.setPointerCapture(e.pointerId);
