@@ -1,11 +1,10 @@
 import Hls from 'hls.js';
 
-interface IWindow {
+interface IWindow extends Window {
     AudioContext: typeof AudioContext;
     webkitAudioContext: typeof AudioContext;
     mozAudioContext: typeof AudioContext;
 }
-declare const window: IWindow;
 
 class Cams {
     DATA_KEY: string;
@@ -14,7 +13,7 @@ class Cams {
     $cams: JQuery<any>;
     camParams: { width: number; height: number; offX: number; offY: number; };
     context: any;
-    soundListener: number;
+    soundListener: any;
     constructor(el: HTMLElement, opts?: object) {
         this.DATA_KEY = 'Cams';
 
@@ -31,7 +30,7 @@ class Cams {
             offY: 0
         };
 
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const AudioContext = (window as IWindow).AudioContext || (window as IWindow).webkitAudioContext;
         this.context = new AudioContext();
 
         this.init();

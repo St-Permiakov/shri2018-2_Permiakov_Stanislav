@@ -1,4 +1,4 @@
-import './app/components/layout/header/header';
-import './app/components/blocks/camera/camera';
-import './app/components/blocks/pleer/pleer';
-import './app/components/blocks/cams/cams';
+import '../../components/layout/header/header';
+import '../../components/blocks/camera/camera';
+import '../../components/blocks/pleer/pleer';
+import '../../components/blocks/cams/cams';

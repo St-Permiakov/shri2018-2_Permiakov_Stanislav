@@ -1,6 +1,18 @@
 const express = require('express');
 const events = require('../app/resources/data/events.json');
 
+interface Iitem {
+    type: string
+}
+
+interface Iquery {
+    type: string
+}
+
+interface Irequest {
+    query: Iquery
+}
+
 function msToTime(duration: number) {
     var milliseconds: number | string = Math.round((duration % 1000) / 100),
         seconds: number | string = Math.round((duration / 1000) % 60),
@@ -19,10 +31,10 @@ const port = 8000;
 
 const serverStartTime = Date.now();
 
-let responseBody;
+let responseBody: any;
 let thisStatus: number;
 
-app.use('/api/events', (request, response, next) => {
+app.use('/api/events', (request: Irequest, response: any, next: any) => {
     if (request.query.type) {
         const types = request.query.type.split(':');
         let filteredEvents;
@@ -36,15 +48,15 @@ app.use('/api/events', (request, response, next) => {
 
         thisStatus = 200;
 
-        types.forEach(type => {
+        types.forEach((type: string) => {
             switch (type) {
                 case 'info':
-                    events.events.forEach(item => {
+                    events.events.forEach((item: Iitem) => {
                         if (item.type === 'info') responseBody.events.push(item);
                     });
                     break;
                     case 'critical':
-                    events.events.forEach(item => {
+                    events.events.forEach((item: Iitem) => {
                         if (item.type === 'critical') responseBody.events.push(item);
                     });
                     break;
@@ -61,11 +73,11 @@ app.use('/api/events', (request, response, next) => {
     next();
 })
 
-app.get('/', (request, response) => {
+app.get('/', (request: Irequest, response: any) => {
     response.status(200).sendFile('./index.html', {"root": __dirname});
 });
 
-app.get('/status',function(request, response, next){
+app.get('/status',function(request: Irequest, response: any, next: any){
     const duration = Date.now() - serverStartTime;
     const date = new Date(serverStartTime);
     const day = date.getDate();
@@ -76,22 +88,22 @@ app.get('/status',function(request, response, next){
     response.send('<p>Сервер работает с ' + day + '.' + month + '.' + year + ', ' + hours + ':' + minutes + ', а это уже целых ' + msToTime(duration) + '!</p><p>Пожалуйста, не напрягайте сервер! Он ещё молодой...</p>')
 });
 
-app.get('/api/events', (request, response) => {
+app.get('/api/events', (request: Irequest, response: any) => {
     thisStatus = thisStatus ? thisStatus : 200;
     response.status(status).json(responseBody);
 });
 
-app.get('/*', (request, response) => {
+app.get('/*', (request: Irequest, response: any) => {
     response.status(404).send('<h1>Page not found</h1>');
 });
 
-app.use((err, request, response, next) => {
+app.use((err: any, request: Irequest, response: any, next: any) => {
     // логирование ошибки, пока просто console.log
     console.log(err);
     response.status(500).send('Something broke!');
 });
 
-app.listen(port, (err) => {
+app.listen(port, (err: any) => {
     if (err) {
         return console.log('Error', err);
     }
