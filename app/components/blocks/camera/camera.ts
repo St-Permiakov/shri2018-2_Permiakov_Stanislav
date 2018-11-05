@@ -2,15 +2,9 @@ interface Pointers {
     [key: number]: PointerEvent
 }
 
-interface Offset {
-    left: number,
-    top: number
-}
-
 class Camera {
     DATA_KEY: string;
     $el: JQuery<HTMLElement>;
-    opts: object;
     $cameraWrapper: JQuery<HTMLElement>;
     $cameraRails: JQuery<HTMLElement>;
     $camera: JQuery<HTMLElement>;
@@ -25,14 +19,13 @@ class Camera {
     prevDiffY: number;
     prevDiff: number;
 
-    constructor(el: HTMLElement, opts?: object) {
+    constructor(el: HTMLElement) {
         const self = this;
         self.DATA_KEY = 'Camera';
 
         // опции
         self.$el = $(el);
         self.$el.data(self.DATA_KEY, self);
-        self.opts = $.extend({}, self.$el.data(), opts);
 
         self.$cameraWrapper = self.$el.find('.js-camera-wrapper');
         self.$cameraRails = self.$el.find('.js-camera-movable');
@@ -64,14 +57,15 @@ class Camera {
 
     setListeners() {
         const self = this;
-        const camera = self.$cameraWrapper[0];
+        const camera: HTMLElement = self.$cameraWrapper[0];
+        const maxWidth: number = 1025;
 
-        if (window.innerWidth < 1025) {
-            camera.addEventListener('pointerdown', (e) => {
+        if (window.innerWidth < maxWidth) {
+            camera.addEventListener('pointerdown', (e: PointerEvent) => {
                 camera.setPointerCapture(e.pointerId);
-                self.camData.x = Math.round((self.$cameraRails.offset() as Offset).left);
+                self.camData.x = Math.round(self.$cameraRails[0].getBoundingClientRect().left);
 
-                camera.addEventListener('pointermove', (e) => {
+                camera.addEventListener('pointermove', (e: PointerEvent) => {
                     if (!self.pointers.hasOwnProperty(e.pointerId))
                         self.pointers[e.pointerId] = e;
 
@@ -87,7 +81,7 @@ class Camera {
                 });
             });
 
-            camera.addEventListener('pointerup', (e) => {
+            camera.addEventListener('pointerup', (e: PointerEvent) => {
                 delete self.pointers[e.pointerId];
                 if (Object.keys(self.pointers).length < 2) {
                     setTimeout(() => {
@@ -107,19 +101,21 @@ class Camera {
             x: self.pointers[pointerId].offsetX,
             y: self.pointers[pointerId].offsetY
         };
+        const imgWidth = self.$cameraRails[0].offsetWidth;
+        const imgLeft = self.$cameraRails[0].getBoundingClientRect().left;
+        const wrapLeft = self.$cameraWrapper[0].getBoundingClientRect().left;
+        const wrapWidtn = self.$cameraWrapper[0].offsetWidth;
 
-        const imgRightEdge =
-            (self.$cameraRails.offset() as Offset).left + (self.$cameraRails.width() as number);
-        const imgLeftEdge = (self.$cameraRails.offset() as Offset).left;
-        const wrapRightEdge =
-            (self.$cameraWrapper.offset() as Offset).left + (self.$cameraWrapper.width() as number);
-        const wrapLeftEdge = (self.$cameraWrapper.offset() as Offset).left;
+        const imgRightEdge = imgLeft + imgWidth;
+        const imgLeftEdge = imgLeft;
+        const wrapRightEdge = wrapLeft + wrapWidtn;
+        const wrapLeftEdge = wrapLeft;
 
         let diff = Math.round(
             e.offsetX -
             startPoint.x +
             self.camData.x -
-            (self.$cameraWrapper.offset() as Offset).left
+            wrapLeft
         );
         if (
             !(wrapLeftEdge <= imgLeftEdge && e.offsetX - startPoint.x > 0) &&

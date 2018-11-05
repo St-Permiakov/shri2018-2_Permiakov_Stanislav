@@ -25,6 +25,7 @@ var browserify = require("browserify");
 var source = require('vinyl-source-stream');
 var tsify = require("tsify");
 
+
 const path = {
     src: {
         html: 'app/components/views/**/*.html',
@@ -84,7 +85,7 @@ gulp.task('css:build', () => {
 gulp.task("js:build", function () {
     return browserify({
         basedir: '.',
-        debug: true,
+        debug: false,
         entries: ['app/assets/js/main.ts'],
         cache: {},
         packageCache: {}
