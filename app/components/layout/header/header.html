@@ -45,13 +45,14 @@
                 </button>
                 <nav class="header__nav js-header-nav">
                     <ul class="header__nav-list">
-                        <li class="header__nav-item"><a href="index.html" class="header__nav-link@@if(context.page === 1){ active}">События</a></li>
+                        <li class="header__nav-item"><a href="#" onclick="dispatcher.trigger('changeState', 'main')" class="header__nav-link@@if(context.page === 1){ active}">События</a></li>
                         <li class="header__nav-item"><a href="#" class="header__nav-link@@if(context.page === 2){ active}">Сводка</a></li>
                         <li class="header__nav-item"><a href="#" class="header__nav-link@@if(context.page === 3){ active}">Устройства</a></li>
                         <li class="header__nav-item"><a href="#" class="header__nav-link@@if(context.page === 4){ active}">Сценарии</a></li>
-                        <li class="header__nav-item"><a href="cams-page.html" class="header__nav-link@@if(context.page === 5){ active}">Камеры</a></li>
+                        <li class="header__nav-item"><a href="#" onclick="dispatcher.trigger('changeState', 'cams')" class="header__nav-link@@if(context.page === 5){ active}">Камеры</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
+    <main class="main js-main">

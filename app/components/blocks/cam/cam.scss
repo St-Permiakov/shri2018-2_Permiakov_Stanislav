@@ -1,6 +1,7 @@
 .cam {
     display: flex;
     max-height: 400px;
+    background-color: #ccc;
     cursor: pointer;
 
     &.is-active {

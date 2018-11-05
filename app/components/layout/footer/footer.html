@@ -1,4 +1,4 @@
-
+</main>
 <footer class="footer js-footer">
     <div class="wrapper">
         <div class="footer__inner">
@@ -18,6 +18,18 @@
 
 </div>
 
+<script src="resources/libs/dispatcher.js"></script>
+<script src="resources/libs/store.js"></script>
+<script>
+    window.dispatcher = new Dispatcher();
+    window.store = new Store();
+    function requestNewState() {
+        const newPage = window.store.getHtml();
+        document.querySelector('.js-main').innerHTML = newPage;
+    }
+    document.addEventListener('stateChanged', requestNewState);
+    requestNewState();
+</script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
