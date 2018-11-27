@@ -1,0 +1,112 @@
+/* helpers */
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
+
+/* core */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  font-size: calc(10 / 1366 * 100vw);
+}
+
+@media (max-width: 1439px) {
+  html, body {
+    font-size: calc(16 / 1366 * 100vw);
+  }
+}
+
+@media (max-width: 1023px) {
+  html, body {
+    font-size: calc(26 / 1366 * 100vw);
+  }
+}
+
+@media (max-width: 1023px) {
+  html, body {
+    font-size: calc(36 / 1366 * 100vw);
+  }
+}
+
+html.full-screen, body.full-screen {
+  overflow: hidden;
+  height: auto;
+}
+
+.Page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  transition: filter 300ms;
+  box-sizing: inherit;
+}
+
+.page.blured {
+  pointer-events: none;
+  filter: blur(3px) brightness(0.4);
+  user-select: none;
+}
+
+.Main {
+  flex-grow: 1;
+  width: 100%;
+  padding: 30px 170px 80px;
+  box-sizing: inherit;
+}
+
+@media (max-width: 1365px) {
+  .Main {
+    padding: 30px 100px 80px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .Main {
+    padding: 30px 40px 80px;
+  }
+}
+
+@media (max-width: 767px) {
+  .Main {
+    padding: 30px 20px 80px;
+  }
+}
+
+.Main-Title {
+  margin: 0 0 30px;
+  font-size: 2.25rem;
+  box-sizing: inherit;
+}
+
+.full-screen .Main {
+  z-index: 30;
+  box-sizing: inherit;
+}
+
+.Wrapper {
+  padding: 0 40px;
+  box-sizing: inherit;
+}
+
+@media (max-width: 767px) {
+  .Wrapper {
+    padding: 0 20px;
+  }
+}

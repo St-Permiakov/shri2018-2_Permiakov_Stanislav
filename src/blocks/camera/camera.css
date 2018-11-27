@@ -1,0 +1,42 @@
+.Camera-ImgWrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  box-sizing: inherit;
+}
+
+.Camera-Movable {
+  position: relative;
+  left: -50px;
+  width: 130%;
+  touch-action: none;
+  overflow: hidden;
+  box-sizing: inherit;
+}
+
+@media (max-width: 767px) {
+  .Camera-Movable {
+    left: -50px;
+    width: 150%;
+  }
+}
+
+.Camera-Img {
+  width: 100%;
+  touch-action: none;
+  box-sizing: inherit;
+}
+
+.Camera-Info {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0 0;
+  font-size: 1.25rem;
+  box-sizing: inherit;
+}
+
+@media (min-width: 1024px) {
+  .Camera-Info {
+    display: none;
+  }
+}
