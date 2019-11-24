@@ -1,18 +1,24 @@
+const path = require('path');
+
+const env = process.env.NODE_ENV;
+
 module.exports = {
-  mode: 'development',
-  output: {
-    filename: 'main.js'
-  },
+  mode: env || 'development',
+  entry: './app/assets/js/main.ts',
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /(node_modules)/,
-        loader: 'babel-loader',
-        query: {
-             presets: ['es2015']
-         }
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/
       }
     ]
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ]
+  },
+  output: {
+    filename: 'main.js',
+    path: path.resolve(__dirname, 'dist/assets/js')
   }
 };

@@ -1,20 +1,29 @@
 import Hls from 'hls.js';
 
+declare global {
+    interface Window {webkitAudioContext: AudioContext; }
+}
+
 class Cams {
-    constructor(el, opts) {
+    DATA_KEY: string;
+    $el: JQuery<HTMLElement>;
+    $cams: JQuery<HTMLElement>;
+    camParams: { width: number; height: number; offX: number; offY: number; };
+    context: AudioContext;
+    soundListener: number | undefined;
+    constructor(el: HTMLElement) {
         this.DATA_KEY = 'Cams';
 
         // опции
         this.$el = $(el);
         this.$el.data(this.DATA_KEY, this);
-        this.opts = $.extend({}, this.$el.data(), opts);
 
         this.$cams = this.$el.find('.js-cam');
         this.camParams = {
-            width: null,
-            height: null,
-            offX: null,
-            offY: null
+            width: 0,
+            height: 0,
+            offX: 0,
+            offY: 0
         };
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -24,8 +33,8 @@ class Cams {
     }
 
     init() {
-        this.$cams.each((i, item) => {
-            const video = $(item).find('.js-cam-video')[0];
+        this.$cams.each((i: number, item: HTMLElement) => {
+            const video = $(item).find('.js-cam-video')[0] as HTMLVideoElement;
             const src = $(item).data('src');
             this.initVideo(video, src);
         });
@@ -53,7 +62,7 @@ class Cams {
         });
     }
 
-    initVideo(video, url) {
+    initVideo(video: HTMLVideoElement, url: string) {
         if (Hls.isSupported()) {
             var hls = new Hls();
             hls.loadSource(url);
@@ -70,10 +79,10 @@ class Cams {
     }
 
     setAnalisers() {
-        this.$cams.each((i, cam) => {
+        this.$cams.each((i: number, cam: HTMLElement) => {
             const $cam = $(cam);
-            const video = $cam.find('.js-cam-video')[0];
-            let vol;
+            const video = $cam.find('.js-cam-video')[0] as HTMLVideoElement;
+            let vol: number;
 
             const analyser = this.context.createAnalyser();
             analyser.smoothingTimeConstant = 0.3;
@@ -93,11 +102,11 @@ class Cams {
                 vol = this.countAverageVol(arr);
             }
 
-            this.soundListener = setInterval(() => {
+            this.soundListener = window.setInterval(() => {
                 if (!video.paused && !video.muted) {
                     vol = vol > 10 ? Math.ceil(vol / 10) : 0;
 
-                    $cam.find('.js-cam-sound-meter-segment').each((i, item) => {
+                    $cam.find('.js-cam-sound-meter-segment').each((i: number, item: HTMLElement) => {
                         if (i > vol) {
                             $(item).hide();
                         } else {
@@ -109,23 +118,23 @@ class Cams {
         });
     }
 
-    tuneCam($cam) {
-        const brightness = parseInt($cam.find('.js-cam-tuner-brightness').val()) + 50;
-        const contrast = parseInt($cam.find('.js-cam-tuner-contrast').val()) + 50;
+    tuneCam($cam: JQuery<HTMLElement>) {
+        const brightness = parseInt(($cam.find('.js-cam-tuner-brightness').val() as string)) + 50;
+        const contrast = parseInt(($cam.find('.js-cam-tuner-contrast').val() as string)) + 50;
 
         $cam.find('.js-cam-video').css('filter', 'brightness(' + brightness + '%) contrast(' + contrast + '%)');
     }
 
-    openCam($cam) {
+    openCam($cam: JQuery<HTMLElement>) {
         const $camInner = $cam.find('.js-cam-inner');
         const $video = $cam.find('.js-cam-video');
 
         $('html, body').addClass('full-screen');
 
-        this.camParams.width = $cam.width();
-        this.camParams.height = $cam.height();
+        this.camParams.width = ($cam.width() as number);
+        this.camParams.height = ($cam.height() as number);
         this.camParams.offX = $cam.position().left;
-        this.camParams.offY = $cam.position().top - $(window).scrollTop();
+        this.camParams.offY = $cam.position().top - ($(window).scrollTop() as number);
 
         $camInner.css({
             'width': this.camParams.width,
@@ -148,14 +157,17 @@ class Cams {
             });
         }, 100);
 
-        $video.attr('controls', 'controls')[0].play();
+        ($video.attr('controls', 'controls')[0] as HTMLVideoElement).play();
     }
 
     closeCam() {
         const $cam = this.$cams.filter('.is-active');
         if ($cam.length) {
             const $camInner = $cam.find('.js-cam-inner');
-            $cam.find('.js-cam-video').removeAttr('controls')[0].pause();
+            const $video = $cam.find('.js-cam-video');
+            const video = $video[0] as HTMLVideoElement;
+            $video.removeAttr('controls');
+            video.pause();
 
             $camInner.css({
                 'width': this.camParams.width,
@@ -174,7 +186,7 @@ class Cams {
         }
     }
 
-    countAverageVol(arr) {
+    countAverageVol(arr: Uint8Array) {
         let values = 0;
         let average;
         let length = arr.length;
@@ -189,7 +201,7 @@ class Cams {
 }
 
 $(() => {
-    $('.js-cams').each((i, item) => {
+    $('.js-cams').each((i: number, item: HTMLElement) => {
         new Cams(item);
     });
 });

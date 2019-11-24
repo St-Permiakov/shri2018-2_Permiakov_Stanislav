@@ -1,12 +1,31 @@
+interface Pointers {
+    [key: number]: PointerEvent
+}
+
 class Camera {
-    constructor(el, opts) {
+    DATA_KEY: string;
+    $el: JQuery<HTMLElement>;
+    $cameraWrapper: JQuery<HTMLElement>;
+    $cameraRails: JQuery<HTMLElement>;
+    $camera: JQuery<HTMLElement>;
+    $zoomVal: JQuery<HTMLElement>;
+    $brightVal: JQuery<HTMLElement>;
+    canMove: boolean;
+    canZoomOut: boolean;
+    canZoomIn: boolean;
+    pointers: Pointers;
+    camData: { x: number; zoom: number; brightness: number; };
+    prevDiffX: number;
+    prevDiffY: number;
+    prevDiff: number;
+
+    constructor(el: HTMLElement) {
         const self = this;
         self.DATA_KEY = 'Camera';
 
         // опции
         self.$el = $(el);
         self.$el.data(self.DATA_KEY, self);
-        self.opts = $.extend({}, self.$el.data(), opts);
 
         self.$cameraWrapper = self.$el.find('.js-camera-wrapper');
         self.$cameraRails = self.$el.find('.js-camera-movable');
@@ -38,15 +57,15 @@ class Camera {
 
     setListeners() {
         const self = this;
-        const camera = self.$cameraWrapper[0];
+        const camera: HTMLElement = self.$cameraWrapper[0];
+        const maxWidth: number = 1025;
 
-        // TODO: исправить баг мерцания под курсором
-        if (window.innerWidth < 1025) {
-            camera.addEventListener('pointerdown', e => {
+        if (window.innerWidth < maxWidth) {
+            camera.addEventListener('pointerdown', (e: PointerEvent) => {
                 camera.setPointerCapture(e.pointerId);
-                self.camData.x = Math.round(self.$cameraRails.offset().left);
+                self.camData.x = Math.round(self.$cameraRails[0].getBoundingClientRect().left);
 
-                camera.addEventListener('pointermove', e => {
+                camera.addEventListener('pointermove', (e: PointerEvent) => {
                     if (!self.pointers.hasOwnProperty(e.pointerId))
                         self.pointers[e.pointerId] = e;
 
@@ -62,7 +81,7 @@ class Camera {
                 });
             });
 
-            camera.addEventListener('pointerup', e => {
+            camera.addEventListener('pointerup', (e: PointerEvent) => {
                 delete self.pointers[e.pointerId];
                 if (Object.keys(self.pointers).length < 2) {
                     setTimeout(() => {
@@ -75,26 +94,28 @@ class Camera {
         }
     }
 
-    handleMove(e) {
+    handleMove(e: PointerEvent) {
         const self = this;
         const pointerId = e.pointerId;
         const startPoint = {
             x: self.pointers[pointerId].offsetX,
             y: self.pointers[pointerId].offsetY
         };
+        const imgWidth = self.$cameraRails[0].offsetWidth;
+        const imgLeft = self.$cameraRails[0].getBoundingClientRect().left;
+        const wrapLeft = self.$cameraWrapper[0].getBoundingClientRect().left;
+        const wrapWidtn = self.$cameraWrapper[0].offsetWidth;
 
-        const imgRightEdge =
-            self.$cameraRails.offset().left + self.$cameraRails.width();
-        const imgLeftEdge = self.$cameraRails.offset().left;
-        const wrapRightEdge =
-            self.$cameraWrapper.offset().left + self.$cameraWrapper.width();
-        const wrapLeftEdge = self.$cameraWrapper.offset().left;
+        const imgRightEdge = imgLeft + imgWidth;
+        const imgLeftEdge = imgLeft;
+        const wrapRightEdge = wrapLeft + wrapWidtn;
+        const wrapLeftEdge = wrapLeft;
 
         let diff = Math.round(
             e.offsetX -
             startPoint.x +
             self.camData.x -
-            self.$cameraWrapper.offset().left
+            wrapLeft
         );
         if (
             !(wrapLeftEdge <= imgLeftEdge && e.offsetX - startPoint.x > 0) &&
@@ -104,15 +125,15 @@ class Camera {
         }
     }
 
-    handleMultiTouch(e) {
+    handleMultiTouch() {
         const self = this;
         let curDiffX = Math.abs(
-            self.pointers[Object.keys(self.pointers)[0]].clientX -
-            self.pointers[Object.keys(self.pointers)[1]].clientX
+            self.pointers[parseInt(Object.keys(self.pointers)[0])].clientX -
+            self.pointers[parseInt(Object.keys(self.pointers)[1])].clientX
         );
         let curDiffY = Math.abs(
-            self.pointers[Object.keys(self.pointers)[0]].clientY -
-            self.pointers[Object.keys(self.pointers)[1]].clientY
+            self.pointers[parseInt(Object.keys(self.pointers)[0])].clientY -
+            self.pointers[parseInt(Object.keys(self.pointers)[1])].clientY
         );
         let curDiff = curDiffX + curDiffY;
         let zoom = self.camData.zoom;

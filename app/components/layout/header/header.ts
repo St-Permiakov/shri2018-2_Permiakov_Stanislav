@@ -1,12 +1,15 @@
 class Header {
-    constructor(el, opts) {
+    DATA_KEY: string;
+    $el: JQuery<HTMLElement>;
+    $navBtn: JQuery<HTMLElement>;
+    $navMenu: JQuery<HTMLElement>;
+    constructor(el: HTMLElement) {
         const self = this;
         self.DATA_KEY = 'Header';
 
         // опции
         self.$el = $(el);
         self.$el.data(self.DATA_KEY, self);
-        self.opts = $.extend({}, self.$el.data(), opts);
 
         self.$navBtn = self.$el.find('.js-header-btn');
         self.$navMenu = self.$el.find('.js-header-nav');
